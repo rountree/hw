@@ -1,0 +1,9 @@
+services:
+  mynode:
+    build:
+      context: ..
+      dockerfile: containers/Dockerfile
+    hostname: myhostname
+    container_name: mycontainer
+    tty: true
+

@@ -1,0 +1,61 @@
+name: ci
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: read
+
+env:
+    workflow_variable: my_workflow_variable
+
+jobs:
+    minimal-reproducer:
+        strategy:
+            matrix:
+                # debug=0 implies no debugging, higher values imply more detail.
+                debug: [0, 1, 2, 3]
+                # Logs are always converted to artifacts if the job fail.
+                #   Set this to true to get artifacts of logs from successful jobs.
+                create_log_artifact_on_success: true
+        env:
+            foo: bar
+        name: reproducer
+        environment: CI
+        runs-on: ubuntu-latest
+        timeout-minutes: 2
+        steps:
+          - name: Check out hw
+            id: checkout-hw
+            uses: actions/checkout@v4
+
+          - name: Setup Docker Compose
+            id: setup-docker-compose
+            uses: docker/setup-compose-action@v2
+            with:
+              version: latest
+
+          - name: Build container image
+            id: build-container
+            run: |
+              docker compose -f ./containers/docker-compose.yml --progress=plain build
+
+          - name: Bring container up
+            id: container-up
+            run: |
+              docker compose -f ./containers/docker-compose.yml up -d
+
+          - name: Test variable expansion
+            id: variable-expansion-test
+            run: |
+               docker exec mycontainer bash -c "echo Hello World! env.debug=${{ env.debug }}"
+               docker exec mycontainer bash -c "echo Hello World! env.create_log_artifact_on_success=${{ env.create_log_artifact_on_success }}"
+
+          - name: Bring container down
+            id: container-down
+            continue-on-error: true
+            run: |
+              docker compose -f ./containers/docker-compose.yml down
+
