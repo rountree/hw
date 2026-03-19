@@ -15,7 +15,7 @@ jobs:
             create_log_artifact_on_success: 1
         strategy:
             matrix:
-                debug: ${{ fromJSON(vars.DEBUG_LEVELS) }}
+                debug: ${{ fromJSON(vars.DEBUG_LEVELS) || [ 0 ] }}
         name: reproducer
         environment: CI
         runs-on: ubuntu-latest
