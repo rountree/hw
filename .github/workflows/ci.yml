@@ -8,8 +8,6 @@ permissions:
   contents: read
   packages: read
 
-env:
-    my_debug_matrix: [0, 1, 2, 3]
 jobs:
     minimal-reproducer:
         env:
@@ -17,7 +15,7 @@ jobs:
             create_log_artifact_on_success: 1
         strategy:
             matrix:
-                debug: ${{ env.DEBUG_LEVELS }}
+                debug: [0, 1, 2, 3]
         name: reproducer
         environment: CI
         runs-on: ubuntu-latest
@@ -48,6 +46,7 @@ jobs:
             run: |
                docker exec mycontainer bash -c "echo Hello World! env.debug=${{ matrix.debug }}"
                docker exec mycontainer bash -c "echo Hello World! env.create_log_artifact_on_success=${{ env.create_log_artifact_on_success }}"
+               docker exec mycontainer bash -c "echo Hello World! env.DEBUG_LEVELS=${{ env.DEBUG_LEVELS }}"
 
           - name: Bring container down
             id: container-down
