@@ -9,7 +9,6 @@ permissions:
   packages: read
 
 jobs:
-    environment: CI
     minimal-reproducer:
         env:
             foo: bar
@@ -47,7 +46,7 @@ jobs:
             run: |
                docker exec mycontainer bash -c "echo Hello World! env.debug=${{ matrix.debug }}"
                docker exec mycontainer bash -c "echo Hello World! env.create_log_artifact_on_success=${{ env.create_log_artifact_on_success }}"
-               docker exec mycontainer bash -c "echo Hello World! env.DEBUG_LEVELS=${{ env.DEBUG_LEVELS }}"
+               docker exec mycontainer bash -c "echo Hello World! env.DEBUG_LEVELS=${{ vars.DEBUG_LEVELS }}"
 
           - name: Bring container down
             id: container-down
