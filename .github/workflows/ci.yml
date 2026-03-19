@@ -13,12 +13,12 @@ env:
 
 jobs:
     minimal-reproducer:
+        env:
+            foo: bar
+            create_log_artifact_on_success: 1
         strategy:
             matrix:
                 debug: [0, 1, 2, 3]
-                create_log_artifact_on_success: 1
-        env:
-            foo: bar
         name: reproducer
         environment: CI
         runs-on: ubuntu-latest
