@@ -15,10 +15,7 @@ jobs:
     minimal-reproducer:
         strategy:
             matrix:
-                # debug=0 implies no debugging, higher values imply more detail.
                 debug: [0, 1, 2, 3]
-                # Logs are always converted to artifacts if the job fail.
-                #   Set this to true to get artifacts of logs from successful jobs.
                 create_log_artifact_on_success: 1
         env:
             foo: bar
