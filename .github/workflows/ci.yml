@@ -9,8 +9,7 @@ permissions:
   packages: read
 
 env:
-    workflow_variable: my_workflow_variable
-
+    my_debug_matrix: [0, 1, 2, 3]
 jobs:
     minimal-reproducer:
         env:
@@ -18,7 +17,7 @@ jobs:
             create_log_artifact_on_success: 1
         strategy:
             matrix:
-                debug: [0, 1, 2, 3]
+                debug: ${{ env.my_debug_matrix }}
         name: reproducer
         environment: CI
         runs-on: ubuntu-latest
@@ -47,7 +46,7 @@ jobs:
           - name: Test variable expansion
             id: variable-expansion-test
             run: |
-               docker exec mycontainer bash -c "echo Hello World! env.debug=${{ env.debug }}"
+               docker exec mycontainer bash -c "echo Hello World! env.debug=${{ matrix.debug }}"
                docker exec mycontainer bash -c "echo Hello World! env.create_log_artifact_on_success=${{ env.create_log_artifact_on_success }}"
 
           - name: Bring container down
