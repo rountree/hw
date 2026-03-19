@@ -9,6 +9,7 @@ permissions:
   packages: read
 
 jobs:
+    environment: CI
     minimal-reproducer:
         env:
             foo: bar
